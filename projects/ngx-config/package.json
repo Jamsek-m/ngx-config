@@ -1,0 +1,11 @@
+{
+    "name": "@mjamsek/ngx-config",
+    "version": "0.0.1",
+    "peerDependencies": {
+        "@angular/common": "^8.2.11",
+        "@angular/core": "^8.2.11"
+    },
+    "publishConfig": {
+        "registry": "https://nexus.mjamsek.com/repository/npm-snapshots/"
+    }
+}
