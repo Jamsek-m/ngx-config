@@ -1,4 +1,5 @@
 # @mjamsek/ngx-config
+![Build Status](https://jenkins.mjamsek.com/buildStatus/icon?job=ngx-config-lib)
 > Library for runtime configuration of Angular applications
 
 ## Introduction

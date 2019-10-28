@@ -1,28 +1,78 @@
-# ConfigService
+# @mjamsek/ngx-config
 ![Build Status](https://jenkins.mjamsek.com/buildStatus/icon?job=ngx-config-lib)
+> Library for runtime configuration of Angular applications
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.12.
+## Introduction
 
-## Development server
+## Documentation
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### Installation
 
-## Code scaffolding
+To install library simply execute command:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```bash
+npm install --save @mjamsek/ngx-config
+```
 
-## Build
+### Usage
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+#### Initialization
 
-## Running unit tests
+Library's initialization method must be called at application startup, preferably, before any other code.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Two recommended ways:
 
-## Running end-to-end tests
+* Register Angular application initializer (recommended - the Angular way)
+* In `main.ts` file to wrap around Angular's bootstrap function
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+##### Application initializer
 
-## Further help
+First, we will need to write factory function, which will call initialization method. For this we can create new file called `factories.ts` and put this code in it:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+```typescript
+import {ConfigService} from "@mjamsek/ngx-config";
+import {environment} from "../environments/environment";
+
+export function AppConfigFactory() {
+    return async () => {
+        await ConfigService.initialize("/config/config.json", environment);
+    };
+}
+```
+
+Next we need to let Angular know, to use this factory when initializing application. We can do this in `app.module.ts`:
+
+```typescript
+import {APP_INITIALIZER, NgModule} from "@angular/core";
+import {AppConfigFactory} from "./factories";
+
+@NgModule({
+    declarations: [],
+    imports: [],
+    providers: [
+        {provide: APP_INITIALIZER, useFactory: AppConfigFactory, multi: true}
+    ],
+    bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+##### Wrapping method
+
+In file `main.ts`, bootstrap Angular method with own:
+
+```typescript
+import { enableProdMode } from "@angular/core";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import { AppModule } from "./app/app.module";
+import { environment } from "./environments/environment";
+import { ConfigService } from "@mjamsek/ngx-config";
+
+if (environment.production) {
+    enableProdMode();
+}
+ConfigService.initialize({path: "/config/config.json", environment: environment}).then(() => {
+    platformBrowserDynamic().bootstrapModule(AppModule)
+        .catch(err => console.error(err));
+});
+```
