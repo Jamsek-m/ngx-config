@@ -1,4 +1,5 @@
 # ConfigService
+![Build Status](https://jenkins.mjamsek.com/buildStatus/icon?job=ngx-config-lib)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.12.
 
