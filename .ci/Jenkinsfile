@@ -34,7 +34,7 @@ pipeline {
         }
         stage("Execute tests") {
             steps {
-                sh "npm run test"
+                sh "npm run test:ci"
             }
         }
         stage("Deploy library") {

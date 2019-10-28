@@ -3,6 +3,13 @@
 
 module.exports = function (config) {
   config.set({
+    browsers: ["Chrome", "HeadlessChrome"],
+    customLaunchers: {
+        HeadlessChrome: {
+            base: "ChromeHeadless",
+            flags: ["--no-sandbox"]
+        }
+    },
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
@@ -25,7 +32,6 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
     singleRun: false,
     restartOnFileChange: true
   });
