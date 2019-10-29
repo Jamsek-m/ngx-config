@@ -1,6 +1,11 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
+const puppeteer = require("puppeteer");
+process.env.CHROME_BIN = puppeteer.executablePath();
+
+console.log("=======> Executing library karma", process.env.CHROME_BIN);
+
 module.exports = function(config) {
     config.set({
         browsers: ["Chrome", "HeadlessChrome"],
