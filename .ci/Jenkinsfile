@@ -32,11 +32,11 @@ pipeline {
                 }
             }
         }
-        /*stage("Execute tests") {
+        stage("Execute tests") {
             steps {
                 sh "npm run test:ci"
             }
-        }*/
+        }
         stage("Deploy library") {
             steps {
                 withNPM(npmrcConfig: 'npm-snapshot-file') {
