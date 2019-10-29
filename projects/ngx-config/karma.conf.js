@@ -4,8 +4,6 @@
 const puppeteer = require("puppeteer");
 process.env.CHROME_BIN = puppeteer.executablePath();
 
-console.log("=======> Executing library karma", process.env.CHROME_BIN);
-
 module.exports = function(config) {
     config.set({
         browsers: ["Chrome", "HeadlessChrome"],
