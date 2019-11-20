@@ -76,3 +76,79 @@ ConfigService.initialize({path: "/config/config.json", environment: environment}
         .catch(err => console.error(err));
 });
 ```
+
+#### Using configuration values
+
+Suppose our initialized configuration looks like this:
+
+```json
+{
+  "api": "https://....",
+  "version": "v1",
+  "auth": {
+    "clientId": "client123"
+  }
+}
+```
+
+Such values can be accessed in two ways:
+
+##### getConfig()
+
+Method `getConfig<E>()` returns object with same structure as environment object. It can be accessed normally.
+
+```typescript
+import { ConfigService } from "@mjamsek/ngx-config";
+
+const api = ConfigService.getConfig<AppEnv>().api;
+const clientId = ConfigService.getConfig<AppEnv>().auth.clientId;
+```
+
+Using generic type `E` is optional, but utilizing it, enables better editors to provide intellisense.
+
+##### getValue(key: string)
+
+Method `getValue(key: string)` returns value from environment object. Nested values can be accessed with dot separated keys.
+
+```typescript
+import { ConfigService } from "@mjamsek/ngx-config";
+
+const api = ConfigService.getValue("api");
+const clientId = ConfigService.getValue("auth.clientId");
+```
+
+##### Recommended usage
+
+It is recommended however, that you do not invoke those methods directly in code, but that you instead use dependency injector provided by Angular.
+
+To do this, we first need to define factory for such value:
+
+```typescript
+import { ConfigService } from "@mjamsek/ngx-config";
+
+export function ClientIdFactory() {
+    return ConfigService.getValue("auth.clientId");
+}
+```
+
+And then we register this factory as value provider in Angular DI:
+
+```typescript
+// app.module.ts
+providers: [
+    {provide: "clientId", useFactory: ClientIdFactory, multi: false}
+]
+```
+
+This is same location where we previously put `APP_INITIALIZER` factory.
+
+To use this injected value, simply put this code in constructor of your component/service:
+
+```typescript
+@Injectable({
+    providedIn: "root"
+})
+export class MyService {
+  constructor(@Inject("clientId") private clientId: string) { }
+}
+```
